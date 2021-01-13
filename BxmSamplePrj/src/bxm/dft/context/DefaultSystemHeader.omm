@@ -1,0 +1,26 @@
+OMM bxm.dft.context.DefaultSystemHeader
+<description="Default customizing extension을 위한 system header">
+{
+	Long msgLen<length=8 description="전문길이">;
+	String guid<length=40 description="Global unique id">;
+	String trxCd<length=12 description="거래코드">;
+	String sysCd<length=3 description="시스템코드">;
+	String chlType<length=2 description="채널유형">;
+	String clientIp<length=15 description="클라이언트IP">;
+	String msgReqDttm<length=16 description="전문요청시간">;
+	String msgResDttm<length=16 description="전문응답시간">;
+	String trxBranchNo<length=4 description="거래지점번호">;
+	String trxTerminalNo<length=4 description="거래단말번호">;
+	String userId<length=8 description="조작자ID">;
+	String apprTrxYn<length=1 description="승인자거래여부">;
+	String apprUserId<length=8 description="승인자ID">;
+	String screenId<length=10 description="화면ID">;
+	String langCd<length=2 description="언어코드">;
+	String resCd<length=1 description="응답코드">;
+	String edayYn<length=1 description="마감여부">;
+	String domainId<length=14 description="domain id">;
+	String filler<length=35 description="filler" comment="domain id추가로 길이조정 : 49->35">;
+	String msgCd<length=9 description="메시지코드">;
+	Integer msgCnt<length=5 description="메시지갯수">;
+	bxm.dft.context.DefaultMessage msgs<length=200 arrayReference="msgCnt" description="메시지">;
+}

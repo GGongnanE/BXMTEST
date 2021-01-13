@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<moduleTestModel>
+    <name>이름 없는 모듈 테스터</name>
+    <endpointURL>http://</endpointURL>
+    <endpointURLList>http://</endpointURLList>
+    <beanFullName>bxm.test.sample.bean.SampleEmpInfoMngBean</beanFullName>
+    <beanMethodName>getEmpInfo</beanMethodName>
+    <inputParamModels>
+        <inputParamModel>
+            <paramFullName>bxm.test.sample.dbio.Sample001Dto</paramFullName>
+            <data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+        </inputParamModel>
+    </inputParamModels>
+    <outputFullName>bxm.test.sample.dbio.Sample001Dto</outputFullName>
+    <testItems>
+        <testItem>
+            <testName>이름 없는 테스트 항목</testName>
+            <headerModel>
+                <fullName>bxm.dft.context.DefaultSystemHeader</fullName>
+                <headerMap/>
+            </headerModel>
+            <inputParamModels>
+                <inputParamModel>
+                    <paramFullName>bxm.test.sample.dbio.Sample001Dto</paramFullName>
+                    <data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+                </inputParamModel>
+            </inputParamModels>
+        </testItem>
+    </testItems>
+</moduleTestModel>
