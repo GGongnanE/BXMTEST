@@ -12,16 +12,18 @@ import bxm.common.annotaion.BxmCategory;
 
 /**
  * <b>BXM Business class</b>
- * <p>sad T.0.T
- * <b>Revision history</b><br>
  * <pre>
  * 2020.12.31 : New creation
+ * 2021.01.13 : git commit-push test
  * </pre>
  *
  * @since 2020.12.31
  * @version 1.0.0
  * @author bankware
  */
+
+
+
 @BxmBean
 @BxmCategory(logicalName = "사원정보 조회 테스트 BEAN", author = "bankware")
 public class SampleEmpInfoMngBean {
