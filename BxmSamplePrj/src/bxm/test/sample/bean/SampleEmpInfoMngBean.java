@@ -12,7 +12,7 @@ import bxm.common.annotaion.BxmCategory;
 
 /**
  * <b>BXM Business class</b>
- * <p>sad
+ * <p>sad T.0.T
  * <b>Revision history</b><br>
  * <pre>
  * 2020.12.31 : New creation
