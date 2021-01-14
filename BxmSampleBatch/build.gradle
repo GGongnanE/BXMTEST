@@ -1,0 +1,199 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+// 프로젝트 구조 설정
+sourceSets {
+	main {
+		java {
+			srcDir 'src'
+			srcDir 'src-gen'
+			
+			output.classesDir="${tempBuildDir}"
+		}
+	}
+	project.buildDir=".gradleBuildDir"
+}
+
+// 환경변수 설정
+configurations {
+	all {
+		resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+		resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+	}
+	
+	downAppJar
+	downAppPar
+}
+
+// 바이너리 저장소 정보
+repositories {
+	maven {
+		url "${repositoryUrl}"
+		credentials {
+			username "${userName}"
+			password "${userPasswd}"
+		}
+	}
+}
+
+// 프로젝트 의존성 설정
+dependencies {
+	compile fileTree(dir: "${bxmRuntimeLibDir}", include: '**/*.jar')
+	compile fileTree(dir: "${libDir}", include: '**/*.jar')
+	
+	// Add application dependency information.
+	
+}
+
+// 컴파일 설정
+compileJava {
+	sourceCompatibility="${javaVersion}"
+	targetCompatibility="${javaVersion}"
+	options.encoding="${compileEncoding}"
+}
+
+// Jar 패키징 설정
+jar {
+	doFirst {
+		copy {
+			from 'src'
+			into "${tempBuildDir}"
+			include '**/*.dbio'
+		}
+		copy {
+			from '.'
+			into "${tempBuildDir}"
+			include 'META-INF/bxm-application.xml'
+		}
+	}
+	
+	archiveName="${buildFileName}.jar"
+	destinationDir=file("${distDir}")
+}
+
+task buildApplication(type: Jar, dependsOn: jar) {
+	group='BXM'
+	description='BXM 어플리케이션을 빌드하여 Jar 및 Par 파일을 생성한다.'
+	
+	def tempBuildDirForPar= "${tempBuildDir}ForPar";
+	
+	doFirst {
+		copy {
+			from "${tempBuildDir}"
+			into "${tempBuildDirForPar}/classes"
+			exclude 'META-INF'
+		}
+		copy {
+			from "${tempBuildDir}"
+			into "${tempBuildDirForPar}"
+			include 'META-INF/bxm-application.xml'
+		}
+	}
+	
+	archiveName="${buildFileName}.par"
+	from "${tempBuildDirForPar}"
+	destinationDir=file("${distDir}")
+	
+	doLast {
+		delete "${tempBuildDir}"
+		delete "${tempBuildDirForPar}"
+	}
+}
+
+// 업로드 할 대상 설정
+artifacts {
+	archives file: file("${distDir}/${buildFileName}.jar"), name: "${buildFileName}", type: 'jar'
+	archives file: file("${distDir}/${buildFileName}.par"), name: "${buildFileName}", type: 'par'
+}
+
+// 업로드 할 바이너리 정보 설정
+uploadArchives {
+	repositories.mavenDeployer {
+		repository(url: "${repositoryUrl}") {
+			authentication(userName: "${userName}", password: "${userPasswd}")
+		}
+		
+		addFilter('jar') { artifact, file ->
+			artifact.type == 'jar'
+		}
+		
+		addFilter('par') { artifact, file ->
+			artifact.type == 'par'
+		}
+		
+		pom('jar').version="${version}"
+		pom('jar').artifactId="${buildFileName}"
+		pom('jar').groupId="${jarGroup}"
+		
+		pom('par').version="${version}"
+		pom('par').artifactId="${buildFileName}"
+		pom('par').groupId="${parGroup}"
+	}
+}
+
+task uploadBinary(dependsOn: buildApplication) {
+	group='BXM'
+	description='BXM 어플리케이션의 패키징 파일을 바이너리 저장소에 업로드 한다.'
+	
+	doLast {
+		uploadArchives.execute()
+	}
+}
+
+task deployApplication {
+	group='BXM'
+	description='BXM 어플리케이션 클래스를 로컬에 설치된 BXM의 어플리케이션 홈으로 배포한다.'
+	
+	doFirst {
+		def del=System.getProperty('delete.before.deploy', 'false')
+		
+		if(del.equalsIgnoreCase('true')) {
+			delete "${applicationHome}/${applicationName}"
+		}
+	}
+	
+	doLast {
+		ant.copy(todir: "${applicationHome}/${applicationName}/classes") {
+			fileset(dir: "${applicationOutput}")
+		}
+		
+		ant.copy(todir: "${applicationHome}/${applicationName}/META-INF", overwrite: 'true') {
+			fileset(dir: 'META-INF')
+		}
+	}
+}
+
+task downloadBinary {
+	group='BXM'
+	description='BXM 어플리케이션이 참조하는 어플리케이션의 Jar 및 Par 파일을 다운로드 한다.'
+	
+	doLast {
+		def extract=System.getProperty('extract.application.par', 'false')
+		
+		copy {
+			from configurations.downAppJar
+			into "${libDir}"
+			rename '(.*)-[0-9]+\\..*.jar', '$1.jar'	
+		}
+		
+		if(extract.equalsIgnoreCase('true')) {
+			configurations.downAppPar.collect {
+				def file= it;
+				
+				copy {
+					from {
+						zipTree(file)
+					}
+					into "${applicationHome}/" + file.name.replaceAll('(.*)-[0-9]+\\..*.par', '$1')
+				}
+			}	
+		}
+		else {
+			copy {
+				from configurations.downAppPar
+				into "${applicationHome}"
+				rename '(.*)-[0-9]+\\..*.par', '$1.par'
+			}
+		}
+	}
+}

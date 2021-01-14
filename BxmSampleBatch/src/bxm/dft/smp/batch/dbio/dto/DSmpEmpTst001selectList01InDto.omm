@@ -1,0 +1,5 @@
+OMM bxm.dft.smp.batch.dbio.dto.DSmpEmpTst001selectList01InDto
+<description="샘플부서번호 조회 입력 IO">
+{
+	Integer feduDeptNo<length=2 description="FW샘플 부서번호">;
+}
