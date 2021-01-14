@@ -37,7 +37,7 @@ import bxm.common.util.StringUtils;
  * <p>
  * <b>Revision history</b><br>
  * <pre>
- * 2021.01.05 : New creation   666667777
+ * 2021.01.05 : New creation  555
  * </pre>
  *
  * @since 2021.01.05
