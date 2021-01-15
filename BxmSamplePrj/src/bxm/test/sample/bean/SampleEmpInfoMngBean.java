@@ -12,9 +12,9 @@ import bxm.common.annotaion.BxmCategory;
 
 /**
  * <b>BXM Business class</b>
- * <pre>fkjgfdkjlgfdjkl
+ * <pre> 
  * 2020.12.31 : New creation
- * 2021.01.13 : git commit-push test    *******
+ * 2021.01.13 : git commit-push test    *******   5555
  * </pre>
  *
  * @since 2020.12.31
