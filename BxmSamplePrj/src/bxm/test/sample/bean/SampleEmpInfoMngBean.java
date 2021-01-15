@@ -15,7 +15,7 @@ import bxm.common.annotaion.BxmCategory;
  * <pre> 
  * 2020.12.31 : New creation
  * 2021.01.13 : git commit-push test    *******   *****324324
- * </pre>                             34534534
+ * </pre>                             
  *
  * @since 2020.12.31
  * @version 1.0.0
